@@ -14,7 +14,7 @@ function getUsername() {
 }
 
 function getStreamQuality() {
-	return config['username'];
+	return config['streamquality'];
 }
 
 function loadConfigFile() {
@@ -44,14 +44,14 @@ function getFollowedChannels(callback) {
 	res.on('end', function() {
 		var jsonData = JSON.parse(data);
 		console.log("Checking if channels are online");
-		
+
 		for (i = 0; i < jsonData['follows'].length; i++) {
 			names[i] = jsonData['follows'][i]['channel']['name'];
 		}
 		callback(names);
-		
+
 	});
-	
+
 	}).on('error', function(e) {
 	  console.error(e);
 	});
@@ -98,7 +98,7 @@ function checkIfOnline(names) {
 			res.on('data', function(d) {
 				data += d;
 			});
-			
+
 			res.on('end', function() {
 				var jsonData = JSON.parse(data);
 				if (jsonData['stream'] != null) {
@@ -110,7 +110,7 @@ function checkIfOnline(names) {
 	}
 
 	async.map(names, onlineCheck, function(err, data) {
-		data = data.filter(function(n){ return n != undefined }); 
+		data = data.filter(function(n){ return n != undefined });
 		readInputFromConsole(data);
 	});
 }
