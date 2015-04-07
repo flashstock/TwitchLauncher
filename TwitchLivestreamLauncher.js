@@ -1,10 +1,11 @@
-var https = require('https');
+var https    = require('https');
 var readline = require('readline')
-var sys = require('sys')
-var exec = require('child_process').exec;
+var sys      = require('sys')
+var exec     = require('child_process').exec;
+var spawn    = require('child_process').spawn;
 var child;
-var fs = require('fs');
-var async = require('async');
+var fs       = require('fs');
+var async    = require('async');
 var config;
 
 run();
@@ -72,16 +73,25 @@ function readInputFromConsole(streams) {
 
 	rl.question("\nWhat stream would you like to watch? Enter a number\n> ", function(answer) {
 		var chosenStream = streams[parseInt(answer)]['channel']['name'];
+		
 		console.log("User chose: " + chosenStream);
-		child = exec('livestreamer twitch.tv/' + chosenStream + ' ' + getStreamQuality(), function (error, stdout, stderr) {
-			console.log('stdout: ' + stdout);
-			console.log('stderr: ' + stderr);
-
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
-		});
+		
+		child = spawn('livestreamer', ['twitch.tv/' + chosenStream, getStreamQuality()]);
+		
 		console.log("Starting livestreamer process");
+
+		child.stdout.setEncoding('utf8');
+		
+		child.stdout.on('data', function(data) {
+			if (data != null)
+				process.stdout.write(data);
+		});
+
+		child.on('close', function (code) {
+    		console.log('process exit code ' + code);
+		});
+
+
 	});
 
 }
