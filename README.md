@@ -5,6 +5,7 @@ To launch this application you need
 
 1. Node
 2. Livestreamer
+3. Async (node package)
 
 There is a config file, put your username and prefered stream quality.
 
