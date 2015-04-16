@@ -89,8 +89,9 @@ function readInputFromConsole(streams) {
 
 		child.on('close', function (code) {
     		console.log('process exit code ' + code);
-		});
+    		process.exit(0);
 
+		});
 
 	});
 
